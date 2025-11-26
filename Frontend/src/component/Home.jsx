@@ -82,7 +82,7 @@ function Home() {
                     padding: '20px',
                     marginLeft: '19%', color: 'green'
                 }}>
-                <u>GFG Budget Tracker</u>
+                <u>EMS</u>
             </h1>
             </div>
             <div className='main1'>

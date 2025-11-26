@@ -96,7 +96,7 @@ function Expense(props) {
     return (
         <>
             <div><h1 className="logo">
-                <u>GFG Budget Tracker</u>
+                <u>EMS</u>
             </h1>
             </div>
             <h3 style={{
