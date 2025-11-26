@@ -14,7 +14,7 @@ function Home() {
     const [budAdd, setAddBud] = useState(true);
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
-
+// localStorage.removeItem('token')
     async function fetchBudgets() {
         try {
             const response = await
@@ -28,6 +28,7 @@ function Home() {
             }
             const data = await response.json();
             console.log(data)
+            // data.sort((a, b) => (a.createAt - b.createAt))
             setBudgets(data);
         } catch (error) {
             console.error('Error fetching budgets:', error);
@@ -92,7 +93,7 @@ function Home() {
                     <input type="text"
                         min="1"
                         className='input1'
-                        placeholder='Enter Expense Name'
+                        placeholder='Enter Budget Name like FEB 25 or Year 2025'
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
@@ -115,12 +116,16 @@ function Home() {
 
                 {budget?.map((bud, index) => (
 
-                    <div className='inner1'>
+                    <div key={index} className='inner1'>
                         <div className='in1' >
-                            Expense Name : {bud.name}
+                            Budget Name : {bud.name}
                         </div>
                         <div className='in2'>
                             Amount :  {bud.totalAmount}
+                        </div>
+                        <div className='in2'>
+                            Date :  {new Date(bud.createdAt).toLocaleString()} 
+                           
                         </div>
                         <Link to={`expense/${bud._id}`}>
                             <button className='btn_exp'>
