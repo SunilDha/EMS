@@ -27,9 +27,8 @@ router.get('/:id/expenses', authMiddleware, async (req, res) => {
     const { id } = req.params;
 
     try {
+        console.log("budget.js line 28");
         const budgets = await Budget.findOne({ _id: id });
-        console.log(budgets)
-
         if (!budgets) {
             return res.status(200).json({ expenses: [] });
         }
@@ -115,6 +114,7 @@ function calculateAmounts(budget) {
 }
 router.get('/', authMiddleware, async (req, res) => {
     try {
+        
         const budgets = await Budget.find({ user: req.user._id });
         const budgetsWithAmounts = budgets.map(budget => {
             const { available, remaining } = calculateAmounts(budget);
@@ -126,7 +126,8 @@ router.get('/', authMiddleware, async (req, res) => {
                 available,
                 remaining,
                 used,
-                user: budget.user
+                user: budget.user,
+                createdAt:budget.createdAt,
             };
         });
         res.status(200).json(budgetsWithAmounts);

@@ -15,6 +15,7 @@ function Expense(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        // localStorage.removeItem('token')
         if (!localStorage.getItem('token')) {
             navigate("/login");
         }
@@ -99,15 +100,14 @@ function Expense(props) {
                 <u>EMS</u>
             </h1>
             </div>
-            <h3 style={{
-                marginTop: '40px', marginBottom: '40px',
+            <h2 style={{
                 textAlign: 'center'
             }}>
-                Budget Name :{expenses.name}</h3>
+                Budget Name: {expenses.name}</h2>
+
             <div className="float-container">
                 <div className="first-child">
-                    <form className="form_exp"
-                        onSubmit={handleSubmit}>
+                    <form className="form_exp" onSubmit={handleSubmit}>
                         <input
                             type="text"
                             placeholder="Expense Name..."
@@ -119,19 +119,33 @@ function Expense(props) {
                             value={amount} onChange={
                                 (e) => setAmount(e.target.value)}
                             className="input_exp" />
+                            <br/>
                         <input type="submit" value="Add"
                             className="btn_exp" />
                     </form>
                 </div>
-
                 <div className="second-child">
-                    <h1 className="text_exp">List of Expenses</h1>
+                    <h1 className="text_exp2">Budget: &#8377; {expenses.total}</h1>
+                    <h1 className="text_exp2">Used: &#8377; {expenses.used}</h1>
+                    <h1 className="text_exp2">Remaining: &#8377; {expenses.available}</h1>
+                </div>
+
+            </div>
+            <div className="float-container">
+                <div className="separate-child">
+                    <h2>Expenses List</h2>
+                    <br/>
+
                     <ul className="newul">
                         {expenses?.budgets?.expenses?.map((item) => {
                             return (
                                 <li className="li_exp">
                                     <span className="name_exp">
                                         {item.name}
+                                    </span>
+                                    <span className="name_exp">
+                                        {new Date(item.createdAt).toLocaleString()}
+                                        
                                     </span>
                                     <span className="a_exp">
                                         {item.amount}
@@ -144,21 +158,7 @@ function Expense(props) {
                     </ul>
                 </div>
             </div>
-            <div className="outer_div">
-                <div className="outer_btn">
-                    Budget:{expenses.total}
-                </div>
-                <div className="outer_btn" style={{
-                    backgroundColor: "red"
-                }}>
-                    Used:{expenses.used}
-                </div>
-                <div className="outer_btn" style={{
-                    backgroundColor: "green"
-                }}>
-                    Left:{expenses.available}
-                </div>
-            </div>
+
         </>
     );
 }
