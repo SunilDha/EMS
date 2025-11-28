@@ -12,9 +12,10 @@ function Home() {
     const [name, setName] = useState('')
     const [amount, setAmount] = useState(0)
     const [budAdd, setAddBud] = useState(true);
+
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
-// localStorage.removeItem('token')
+    // localStorage.removeItem('token')
     async function fetchBudgets() {
         try {
             const response = await
@@ -35,8 +36,6 @@ function Home() {
 
         }
     };
-
-
 
     useEffect(() => {
         if (!localStorage.getItem('token')) {
@@ -76,6 +75,18 @@ function Home() {
 
         }
     };
+
+    const deleteItem = (id) => {
+        try {
+            if (confirm("Are you sure want to delete?")) {
+                console.log(id);
+            }
+        }
+        catch (error) {
+
+        }
+    }
+
     return (
         <>
             <div><h1 className="logoHome"
@@ -90,7 +101,7 @@ function Home() {
 
                 <form className='f1'
                     onSubmit={handleSubmit} method='POST'>
-                    <input type="text"
+                    <input type="text" required
                         min="1"
                         className='input1'
                         placeholder='Enter Budget Name like FEB 25 or Year 2025'
@@ -124,14 +135,20 @@ function Home() {
                             Amount :  {bud.totalAmount}
                         </div>
                         <div className='in2'>
-                            Date :  {new Date(bud.createdAt).toLocaleString()} 
-                           
+                            Date :  {`${new Date(bud.createdAt).getDate()}-${new Date(bud.createdAt).getMonth() + 1}-${new Date(bud.createdAt).getFullYear()}`}
+
+
                         </div>
                         <Link to={`expense/${bud._id}`}>
                             <button className='btn_exp'>
                                 Open Budget
                             </button>
-                        </Link>
+                        </Link>&nbsp;&nbsp;
+
+                        <button onClick={() => deleteItem(bud._id)} className='btn_danger'>
+                            Delete Budget
+                        </button>
+
                     </div>
                 ))}
 
