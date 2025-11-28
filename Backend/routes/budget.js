@@ -33,7 +33,7 @@ router.get('/:id/expenses', authMiddleware, async (req, res) => {
             return res.status(200).json({ expenses: [] });
         }
         const { available, remaining, totalExpenses } =
-                                                    calculateAmounts(budgets);
+            calculateAmounts(budgets);
 
 
         const data = {
@@ -102,6 +102,39 @@ router.post('/:id/expenses', authMiddleware,
         }
     });
 
+// Delete an expense of a budget
+router.delete('/:id/expenses/:eid', authMiddleware,
+    async (req, res) => {
+        const { id, eid } = req.params;
+        try {
+            const budget = await Budget.findOne({
+                _id: id, user: req.user._id
+            });
+            if (!budget) {
+                return res.status(404).json({
+                    message: 'Budget not found'
+                });
+            }
+            // Find expense index
+            const index = budget.expenses.findIndex(
+                exp => exp._id.toString() === eid
+            );            
+
+            if (index === -1) {
+                return res.status(404).json({
+                    message: 'Expense not found'
+                });
+            }
+            // Remove expense
+            budget.expenses.splice(index, 1);
+            await budget.save();
+
+            res.status(200).json(budget);
+        } catch (error) {
+
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    });
 
 
 // Calculate available and remaining amounts for a budget
@@ -114,7 +147,7 @@ function calculateAmounts(budget) {
 }
 router.get('/', authMiddleware, async (req, res) => {
     try {
-        
+
         const budgets = await Budget.find({ user: req.user._id });
         const budgetsWithAmounts = budgets.map(budget => {
             const { available, remaining } = calculateAmounts(budget);
@@ -127,7 +160,7 @@ router.get('/', authMiddleware, async (req, res) => {
                 remaining,
                 used,
                 user: budget.user,
-                createdAt:budget.createdAt,
+                createdAt: budget.createdAt,
             };
         });
         res.status(200).json(budgetsWithAmounts);
